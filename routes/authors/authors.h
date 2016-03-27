@@ -1,5 +1,5 @@
 //
-// Created by tetofag on 27.03.16.
+// Created by blkshdw on 27.03.16.
 //
 
 #ifndef BOOSHELF_SERVER_AUTHORS_H
