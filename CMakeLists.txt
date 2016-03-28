@@ -21,6 +21,11 @@ if (JANSSON_FOUND)
     include_directories(${JANSSON_INCLUDE_DIRS})
 endif()
 
-set(SOURCE_FILES main.cpp exceptions/httpExceptions.cpp exceptions/httpExceptions.h tools/auth.cpp tools/auth.h routes/books/books.cpp routes/books/books.h routes/users/users.cpp routes/users/users.h routes/reviews/reviews.cpp routes/reviews/reviews.h routes/authors/authors.cpp routes/authors/authors.h)
+set(SOURCE_FILES main.cpp exceptions/httpExceptions.cpp
+        exceptions/httpExceptions.h tools/auth.cpp
+        tools/auth.h routes/books/books.cpp routes/books/books.h
+        routes/users/users.cpp routes/users/users.h
+        routes/reviews/reviews.cpp routes/reviews/reviews.h
+        routes/authors/authors.cpp routes/authors/authors.h tools/token.cpp tools/token.h)
 add_executable(BooShelf_server ${SOURCE_FILES})
 TARGET_LINK_LIBRARIES( BooShelf_server ${Boost_LIBRARIES} ${JANSSON_LIBRARIES} ssl crypto rethinkdb++ jwt)

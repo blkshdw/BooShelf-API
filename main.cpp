@@ -1,13 +1,12 @@
-#include "crow_all.h"
+// ROUTES
 #include "routes/users/users.h"
-#include "tools/auth.h"
-#include "exceptions/httpExceptions.h"
+
+// LIBRARIES
+#include "crow_all.h"
 #include <rethinkdb.h>
 #include <fstream>
 #include <string>
 #include <streambuf>
-#include <jwt.h>
-
 
 namespace R = RethinkDB;
 namespace json = crow::json;
@@ -28,26 +27,16 @@ int main(){
     std::unique_ptr<R::Connection> conn = R::connect(DB_host, DB_port);
     auto const db = R::db(DB_name);
 
-    jwt* key;
-    jwt_new(&key);
-    jwt_add_grants_json(key, config_str.c_str());
-    
-
-    CROW_ROUTE(app, "/users")
-            ([&db, &conn]() {
-                json::wvalue response;
-                R::Cursor cursor = db.table("users").run(*conn);
-                for (R::Datum& user : cursor) {
-                    json::rvalue userJSON = json::load(R::write_datum(user).c_str());
-                    response["users"][userJSON["id"].s()] = userJSON;
-                }
-                return response;
-            });
-
     CROW_ROUTE(app, "/me")
             .methods("GET"_method)
     ([&db, &conn] (const crow::request& req) {
-        return Route::me(conn, db, req);
+        return BooShelf::Route::me(conn, db, req);
+    });
+
+    CROW_ROUTE(app, "/users")
+            .methods("POST"_method)
+    ([&db, &conn] (const crow::request& req) {
+        return BooShelf::Route::createUser(conn, db, req);
     });
 
     app.port(config["server"]["port"].i()).multithreaded().run();

@@ -15,7 +15,7 @@ libssl
 
 libcrypto
 
-[libjansson (required by libjwt)](https://github.com/akheron/jansson)
+[libjansson (required by libjwt)](https://github.com/benmcollins/libjwt.git)
 
 [libjwt]((required by libjwt) https://github.com/almet/jwtcpp)
 

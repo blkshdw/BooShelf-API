@@ -2,10 +2,9 @@
 // Created by blkshdw on 27.03.16.
 //
 #include "httpExceptions.h"
-#include <string>
-#include "../crow_all.h"
 
 using namespace std;
+using namespace BooShelf;
 
 Http::HttpException::HttpException(string message, int status){
     _status = status;
@@ -23,11 +22,12 @@ int Http::HttpException::status(){
     return _status;
 };
 
+// 404
 Http::NotFoundException::NotFoundException(): Http::HttpException(string("Not Found"), 404){
 
 };
 
-
+// 403
 Http::NotFoundException::NotFoundException(string message): Http::HttpException(string("Not Found: " + message), 404) {
 
 };
@@ -36,22 +36,41 @@ Http::AccessDeniedException::AccessDeniedException(): Http::HttpException(string
 
 };
 
-Http::AccessDeniedException::AccessDeniedException(string message): Http::HttpException(string("Access Denied: " + message), 403) {
+Http::AccessDeniedException::AccessDeniedException(string message): HttpException(string("Access Denied: " + message), 403) {
 
 };
 
+// 422
 Http::UnprocessableEntityException::UnprocessableEntityException(): Http::HttpException(string("Unprocessable Entity"), 422){
 
 };
 
-Http::UnprocessableEntityException::UnprocessableEntityException(string message): Http::HttpException(string("Unprocessable Entity: " + message), 422) {
+BooShelf::Http::UnprocessableEntityException::UnprocessableEntityException(string message): Http::HttpException(string("Unprocessable Entity: " + message), 422) {
 
 };
 
-Http::AlreadyLoggedInException::AlreadyLoggedInException(): Http::UnprocessableEntityException(string("Aready Logged In")){
+BooShelf::Http::AlreadyLoggedInException::AlreadyLoggedInException(): Http::UnprocessableEntityException(string("Aready Logged In")){
 
 };
 
-Http::AlreadyLoggedInException::AlreadyLoggedInException(string message): Http::UnprocessableEntityException(string("Aready Logged In: " + message)) {
+BooShelf::Http::AlreadyLoggedInException::AlreadyLoggedInException(string message): Http::UnprocessableEntityException(string("Aready Logged In: " + message)) {
+
+};
+
+BooShelf::Http::AlreadyRegisteredException::AlreadyRegisteredException(): Http::UnprocessableEntityException(string("Aready Registered")){
+
+};
+
+BooShelf::Http::AlreadyRegisteredException::AlreadyRegisteredException(string message): Http::UnprocessableEntityException(string("Already Registered: " + message)) {
+
+};
+
+// 500
+
+Http::DataBaseException::DataBaseException(): Http::HttpException(string("RethinkDB Error"), 500){
+
+};
+
+Http::DataBaseException::DataBaseException(string message): Http::HttpException(string("RethinkDB Error: " + message), 500){
 
 };
