@@ -1,56 +1,30 @@
 # BooShelf-API
 HTTP Server for BooShelf project
 
-# Build
+## Dependincies & Requirements
 
-## Requirements
-```
-RethinkDB
-```
+[RethinkDB](http://rethinkdb.com/)
 
-```
-Boost
-```
+[RethinkDB C++ driver](https://github.com/AtnNn/librethinkdbxx)
 
-```
+Boost (required by crow)
+
+[crow](https://github.com/ipkn/crow) ~ included in this project as [my fork](https://github.com/blkshdw/crow)
+
 libssl
-```
 
-```
 libcrypto
-```
 
-## Build on Ubuntu:
+[libjansson (required by libjwt)](https://github.com/akheron/jansson)
 
-### Install RethinkDB
+[libjwt]((required by libjwt) https://github.com/almet/jwtcpp)
 
-```
-source /etc/lsb-release && echo "deb http://download.rethinkdb.com/apt $DISTRIB_CODENAME main" | sudo tee /etc/apt/sources.list.d/rethinkdb.list
-wget -qO- https://download.rethinkdb.com/apt/pubkey.gpg | sudo apt-key add -
-sudo apt-get update
-sudo apt-get install rethinkdb
-```
-
-### Install Boost
-```
-sudo apt-get install libboost-all-dev
-```
-
-### Install libssl and libcrypto
-```
-sudo apt-get install libssl-dev libcrypto++-dev
-```
-
-## Build & run
+## Build
 ```
 make
 ```
 
 ## Thanks to
-```
-crow https://github.com/ipkn/crow
-```
+[crow](https://github.com/ipkn/crow)
 
-```
-RethinkDB C++ driver https://github.com/AtnNn/librethinkdbxx
-```
+[RethinkDB C++ driver](https://github.com/AtnNn/librethinkdbxx)
