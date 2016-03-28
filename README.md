@@ -46,7 +46,7 @@ sudo apt-get install libssl-dev libcrypto++-dev
 make
 ```
 
-## Contributions
+## Thanks to
 ```
 crow https://github.com/ipkn/crow
 ```
