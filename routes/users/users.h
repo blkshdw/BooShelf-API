@@ -9,6 +9,7 @@
 
 namespace Route {
     crow::response me(std::unique_ptr<RethinkDB::Connection> &conn, const RethinkDB::Query &db, const crow::request &req);
+    crow::response createUser(std::unique_ptr<RethinkDB::Connection> &conn, const RethinkDB::Query &db, const crow::request &req);
 }
 
 #endif //BOOSHELF_SERVER_USERS_H

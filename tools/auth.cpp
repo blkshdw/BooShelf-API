@@ -9,11 +9,19 @@
 namespace R = RethinkDB;
 using namespace std;
 
-crow::json::wvalue checkAuth(std::unique_ptr<R::Connection>& conn, const R::Query& db, const crow::request& req) {
+crow::json::wvalue Auth::reqAuth(std::unique_ptr<R::Connection>& conn, const R::Query& db, const crow::request& req) {
     auto token = req.get_header_value("Token");
-    R::Cursor cursor = db.table("users").filter(R::row["token"] == token).run(*conn);
+    R::Cursor cursor = db.table("users").filter(R::row["token"] == token).without(string("password")).run(*conn);
     for (R::Datum& user : cursor) {
         return crow::json::load(R::write_datum(user).c_str());
     }
-    throw AccessDeniedException();
+    throw Http::AccessDeniedException();
+};
+
+void Auth::reqNotAuth(std::unique_ptr<R::Connection>& conn, const R::Query& db, const crow::request& req) {
+    auto token = req.get_header_value("Token");
+    R::Cursor cursor = db.table("users").filter(R::row["token"] == token).without(string("password")).run(*conn);
+    for (R::Datum& user : cursor) {
+        throw Http::AlreadyLoggedInException();
+    }
 };

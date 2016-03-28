@@ -7,35 +7,51 @@
 
 using namespace std;
 
-HttpException::HttpException(string message, int status){
+Http::HttpException::HttpException(string message, int status){
     _status = status;
     _message = message;
 };
 
-crow::json::wvalue HttpException::body(){
+crow::json::wvalue Http::HttpException::body(){
     crow::json::wvalue res;
     res["error"]["type"] = to_string(_status);
     res["error"]["message"] = _message;
     return res;
 };
 
-int HttpException::status(){
+int Http::HttpException::status(){
     return _status;
 };
 
-NotFoundException::NotFoundException(): HttpException(string("Not Found"), 404){
+Http::NotFoundException::NotFoundException(): Http::HttpException(string("Not Found"), 404){
 
 };
 
 
-NotFoundException::NotFoundException(string message): HttpException(string("Not Found: " + message), 404) {
+Http::NotFoundException::NotFoundException(string message): Http::HttpException(string("Not Found: " + message), 404) {
 
 };
 
-AccessDeniedException::AccessDeniedException(): HttpException(string("Access Denied"), 403){
+Http::AccessDeniedException::AccessDeniedException(): Http::HttpException(string("Access Denied"), 403){
 
 };
 
-AccessDeniedException::AccessDeniedException(string message): HttpException(string("Access Denied: " + message), 403) {
+Http::AccessDeniedException::AccessDeniedException(string message): Http::HttpException(string("Access Denied: " + message), 403) {
+
+};
+
+Http::UnprocessableEntityException::UnprocessableEntityException(): Http::HttpException(string("Unprocessable Entity"), 422){
+
+};
+
+Http::UnprocessableEntityException::UnprocessableEntityException(string message): Http::HttpException(string("Unprocessable Entity: " + message), 422) {
+
+};
+
+Http::AlreadyLoggedInException::AlreadyLoggedInException(): Http::UnprocessableEntityException(string("Aready Logged In")){
+
+};
+
+Http::AlreadyLoggedInException::AlreadyLoggedInException(string message): Http::UnprocessableEntityException(string("Aready Logged In: " + message)) {
 
 };

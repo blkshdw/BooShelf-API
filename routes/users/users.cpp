@@ -13,8 +13,19 @@ namespace json = crow::json;
 crow::response Route::me(std::unique_ptr<R::Connection> &conn, const R::Query &db, const crow::request& req) {
     json::wvalue user;
     try {
-        user = checkAuth(conn, db, req);
-    } catch (HttpException error) {
+        user = Auth::reqAuth(conn, db, req);
+    } catch (Http::HttpException error) {
+        return crow::response(error.status(), error.body());
+    };
+
+    return crow::response(user);
+}
+
+crow::response Route::createUser(std::unique_ptr<R::Connection> &conn, const R::Query &db, const crow::request& req) {
+    json::wvalue user;
+    try {
+        Auth::reqNotAuth(conn, db, req);
+    } catch (Http::HttpException error) {
         return crow::response(error.status(), error.body());
     };
 

@@ -7,6 +7,9 @@
 #ifndef BOOSHELF_SERVER_AUTH_H
 #define BOOSHELF_SERVER_AUTH_H
 
-crow::json::wvalue checkAuth(std::unique_ptr<RethinkDB::Connection>&, const RethinkDB::Query&, const crow::request&);
+namespace Auth {
+    crow::json::wvalue reqAuth(std::unique_ptr<RethinkDB::Connection> &, const RethinkDB::Query &, const crow::request &);
+    void reqNotAuth(std::unique_ptr<RethinkDB::Connection> &, const RethinkDB::Query &, const crow::request &);
+}
 
 #endif //BOOSHELF_SERVER_AUTH_H
