@@ -25,6 +25,7 @@ crow::response Route::me(std::unique_ptr<R::Connection> &conn, const R::Query &d
 
 crow::response Route::createUser(std::unique_ptr<R::Connection> &conn, const R::Query &db, const crow::request& req) {
     json::wvalue user;
+
     try {
         Auth::reqNotAuth(conn, db, req);
     } catch (Http::HttpException error) {
@@ -43,6 +44,8 @@ crow::response Route::createUser(std::unique_ptr<R::Connection> &conn, const R::
         auto response = Http::UnprocessableEntityException("Password is too short");
         return crow::response(response.status(), response.body());
     }
+
+    auto a = &req.middleware_context;
 
     R::Cursor cursor = db.table("users").filter(R::row["username"] == userName).run(*conn);
     for (R::Datum& userElem : cursor) {

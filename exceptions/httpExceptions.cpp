@@ -12,10 +12,14 @@ Http::HttpException::HttpException(string message, int status){
 };
 
 crow::json::wvalue Http::HttpException::body(){
-    crow::json::wvalue res;
-    res["error"]["type"] = to_string(_status);
-    res["error"]["message"] = _message;
-    return res;
+    crow::json::wvalue body;
+    body["error"]["type"] = to_string(_status);
+    body["error"]["message"] = _message;
+    return body;
+};
+
+crow::response Http::HttpException::response(){
+    return crow::response(_status, crow::json::dump(this->body()));
 };
 
 int Http::HttpException::status(){

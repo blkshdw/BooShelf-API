@@ -1,3 +1,5 @@
+// MIDDLEWARE
+#include "middleware/auth.h"
 // ROUTES
 #include "routes/users/users.h"
 
@@ -14,7 +16,8 @@ using namespace std;
 
 int main(){
 
-    crow::SimpleApp app;
+    crow::App<ExampleMiddleware> app;
+    app.get_middleware<ExampleMiddleware>().setMessage("hello");
 
     // CONFIG
     std::ifstream config_file("config.json");
@@ -38,6 +41,8 @@ int main(){
     ([&db, &conn] (const crow::request& req) {
         return BooShelf::Route::createUser(conn, db, req);
     });
+
+    crow::logger::setLogLevel(crow::LogLevel::DEBUG);
 
     app.port(config["server"]["port"].i()).multithreaded().run();
 }
