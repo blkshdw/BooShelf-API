@@ -3,6 +3,9 @@
 //
 
 #include "../crow_all.h"
+#include "../access-rights/Visitor.h"
+#include "../access-rights/GuestVisitor.h"
+#include "../access-rights/UserVisitor.h"
 #include <rethinkdb.h>
 #include <string>
 
@@ -13,12 +16,13 @@ namespace BooShelf {
         struct Auth {
         private:
             static RethinkDB::Query& _db;
-            static std::unique_ptr<RethinkDB::Connection> _conn;
+            static std::shared_ptr<RethinkDB::Connection> _conn;
         public:
-            Auth(std::unique_ptr<RethinkDB::Connection> &conn, const RethinkDB::Query &db);
+            Auth();
+            void setDB(std::shared_ptr<RethinkDB::Connection> conn, const RethinkDB::Query &db);
 
             struct context {
-                std::string message;
+                std::shared_ptr<BooShelf::Visitor> visitor;
             };
             void before_handle(crow::request& req, crow::response& res, context& ctx);
             void after_handle(crow::request& req, crow::response& res, context& ctx);

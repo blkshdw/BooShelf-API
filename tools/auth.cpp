@@ -7,7 +7,7 @@
 namespace R = RethinkDB;
 using namespace std;
 
-crow::json::wvalue BooShelf::Auth::reqAuth(std::unique_ptr<R::Connection>& conn, const R::Query& db, const crow::request& req) {
+crow::json::wvalue BooShelf::Auth::reqAuth(std::shared_ptr<R::Connection>& conn, const R::Query& db, const crow::request& req) {
     auto token = req.get_header_value("Token");
     R::Cursor cursor = db.table("users").filter(R::row["token"] == token).without(string("password")).run(*conn);
     for (R::Datum& user : cursor) {
@@ -16,7 +16,7 @@ crow::json::wvalue BooShelf::Auth::reqAuth(std::unique_ptr<R::Connection>& conn,
     throw BooShelf::Http::AccessDeniedException();
 };
 
-void BooShelf::Auth::reqNotAuth(std::unique_ptr<R::Connection>& conn, const R::Query& db, const crow::request& req) {
+void BooShelf::Auth::reqNotAuth(std::shared_ptr<R::Connection>& conn, const R::Query& db, const crow::request& req) {
     auto token = req.get_header_value("Token");
     R::Cursor cursor = db.table("users").filter(R::row["token"] == token).without(string("password")).run(*conn);
     for (R::Datum& user : cursor) {

@@ -3,6 +3,9 @@
 // ROUTES
 #include "routes/users/users.h"
 
+// EXCEPTIONS
+#include "exceptions/httpExceptions.h"
+
 // LIBRARIES
 #include "crow_all.h"
 #include <rethinkdb.h>
@@ -16,6 +19,9 @@ using namespace std;
 
 int main(){
 
+    crow::App<BooShelf::Middleware::Auth> app;
+
+
     // CONFIG
     std::ifstream config_file("config.json");
     // DB CONFIG
@@ -24,21 +30,30 @@ int main(){
     auto const DB_host = config["database"]["host"].s();
     auto const DB_port = config["database"]["port"].i();
     string const DB_name = config["database"]["name"].s();
-    std::unique_ptr<R::Connection> conn = R::connect(DB_host, DB_port);
+    std::shared_ptr<R::Connection> conn = R::connect(DB_host, DB_port);
     auto const db = R::db(DB_name);
 
-    crow::App<BooShelf::Middleware::Auth(conn, db)> app;
+    app.get_middleware<BooShelf::Middleware::Auth>().setDB(conn, db);
 
     CROW_ROUTE(app, "/me")
             .methods("GET"_method)
     ([&db, &conn] (const crow::request& req) {
-        return BooShelf::Route::me(conn, db, req);
+        try {
+            return BooShelf::Route::me(conn, db, req);
+        } catch (BooShelf::Http::HttpException error) {
+            return error.response();
+        }
     });
 
     CROW_ROUTE(app, "/users")
             .methods("POST"_method)
     ([&db, &conn] (const crow::request& req) {
-        return BooShelf::Route::createUser(conn, db, req);
+        try {
+            return BooShelf::Route::createUser(conn, db, req);
+        } catch (BooShelf::Http::HttpException error) {
+            return error.response();
+        }
+
     });
 
     crow::logger::setLogLevel(crow::LogLevel::DEBUG);

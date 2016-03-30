@@ -9,8 +9,8 @@
 
 namespace BooShelf {
     namespace Auth {
-        crow::json::wvalue reqAuth(std::unique_ptr<RethinkDB::Connection> &, const RethinkDB::Query &, const crow::request &);
-        void reqNotAuth(std::unique_ptr<RethinkDB::Connection> &, const RethinkDB::Query &, const crow::request &);
+        crow::json::wvalue reqAuth(std::shared_ptr<RethinkDB::Connection> &, const RethinkDB::Query &, const crow::request &);
+        void reqNotAuth(std::shared_ptr<RethinkDB::Connection> &, const RethinkDB::Query &, const crow::request &);
     }
 }
 
