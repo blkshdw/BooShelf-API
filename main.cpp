@@ -16,9 +16,6 @@ using namespace std;
 
 int main(){
 
-    crow::App<ExampleMiddleware> app;
-    app.get_middleware<ExampleMiddleware>().setMessage("hello");
-
     // CONFIG
     std::ifstream config_file("config.json");
     // DB CONFIG
@@ -29,6 +26,8 @@ int main(){
     string const DB_name = config["database"]["name"].s();
     std::unique_ptr<R::Connection> conn = R::connect(DB_host, DB_port);
     auto const db = R::db(DB_name);
+
+    crow::App<BooShelf::Middleware::Auth(conn, db)> app;
 
     CROW_ROUTE(app, "/me")
             .methods("GET"_method)

@@ -2,6 +2,7 @@
 // Created by blkshdw on 27.03.16.
 //
 #include "users.h"
+#include "../../middleware/auth.h"
 #include "../../tools/auth.h"
 #include "../../exceptions/httpExceptions.h"
 #include "../../tools/token.h"
@@ -14,6 +15,7 @@ using namespace BooShelf;
 
 crow::response Route::me(std::unique_ptr<R::Connection> &conn, const R::Query &db, const crow::request& req) {
     json::wvalue user;
+    auto a = (ExampleMiddleware::context*)req.middleware_context;
     try {
         user = Auth::reqAuth(conn, db, req);
     } catch (Http::HttpException error) {
