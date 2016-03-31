@@ -13,9 +13,10 @@ namespace R = RethinkDB;
 namespace json = crow::json;
 using namespace BooShelf;
 
-crow::response Route::me(shared_ptr<RethinkDB::Connection> conn, const R::Query &db, const crow::request& req) {
+crow::response Route::me(shared_ptr<RethinkDB::Connection> conn, const R::Query& db, const crow::request& req) {
     json::wvalue user;
     auto authCTX = (Middleware::Auth::context*)req.middleware_context;
+    cout << authCTX->visitor->canAddAuthor();
     if (authCTX->visitor->canGetOwnProfile()) {
         return crow::response(user);
     }
@@ -24,7 +25,7 @@ crow::response Route::me(shared_ptr<RethinkDB::Connection> conn, const R::Query 
     }
 }
 
-crow::response Route::createUser(std::shared_ptr<R::Connection> &conn, const R::Query &db, const crow::request& req) {
+crow::response Route::createUser(std::shared_ptr<R::Connection> &conn, const R::Query& db, const crow::request& req) {
     json::wvalue user;
 
     try {

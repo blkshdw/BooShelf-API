@@ -9,8 +9,8 @@
 
 namespace BooShelf {
     namespace Route {
-        crow::response me(std::shared_ptr<RethinkDB::Connection> conn, const RethinkDB::Query &db, const crow::request &req);
-        crow::response createUser(std::shared_ptr<RethinkDB::Connection> &conn, const RethinkDB::Query &db, const crow::request &req);
+        crow::response me(std::shared_ptr<RethinkDB::Connection> conn, const RethinkDB::Query& db, const crow::request &req);
+        crow::response createUser(std::shared_ptr<RethinkDB::Connection> &conn, const RethinkDB::Query& db, const crow::request &req);
     }
 }
 

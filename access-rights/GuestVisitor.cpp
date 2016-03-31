@@ -30,7 +30,7 @@ bool GuestVisitor::canGetOwnProfile() {
 }
 
 crow::json::wvalue GuestVisitor::getuserJSON() {
-    return nullptr;
+    return crow::json::wvalue();
 }
 
 // Other Profile

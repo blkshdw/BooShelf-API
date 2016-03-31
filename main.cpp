@@ -30,7 +30,13 @@ int main(){
     auto const DB_host = config["database"]["host"].s();
     auto const DB_port = config["database"]["port"].i();
     string const DB_name = config["database"]["name"].s();
-    std::shared_ptr<R::Connection> conn = R::connect(DB_host, DB_port);
+    std::shared_ptr<R::Connection> conn;
+    try {
+         conn = R::connect(DB_host, DB_port);
+    } catch (R::Error err) {
+        CROW_LOG_ERROR << "RethinkDB: " + err.message;
+    }
+
     auto const db = R::db(DB_name);
 
     app.get_middleware<BooShelf::Middleware::Auth>().setDB(conn, db);

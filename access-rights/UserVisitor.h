@@ -9,11 +9,11 @@
 namespace BooShelf {
     class UserVisitor: public Visitor {
     private:
-        crow::json::wvalue _userJSON;
+        crow::json::rvalue _userJSON;
     public:
         UserVisitor();
         ~UserVisitor();
-        UserVisitor(crow::json::wvalue userJSON);
+        UserVisitor(crow::json::rvalue userJSON);
 
         // Own Profile
         bool canRegister() override;

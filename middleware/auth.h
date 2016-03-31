@@ -15,17 +15,18 @@ namespace BooShelf {
     namespace Middleware {
         struct Auth {
         private:
-            static RethinkDB::Query& _db;
+            static const RethinkDB::Query* _db;
             static std::shared_ptr<RethinkDB::Connection> _conn;
         public:
             Auth();
-            void setDB(std::shared_ptr<RethinkDB::Connection> conn, const RethinkDB::Query &db);
+            void setDB(std::shared_ptr<RethinkDB::Connection> conn, const RethinkDB::Query& db);
 
             struct context {
                 std::shared_ptr<BooShelf::Visitor> visitor;
             };
             void before_handle(crow::request& req, crow::response& res, context& ctx);
             void after_handle(crow::request& req, crow::response& res, context& ctx);
+
         };
     }
 }

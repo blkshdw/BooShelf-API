@@ -1,7 +1,7 @@
 {
   "server": {
     "host": "localhost",
-    "port": 18032
+    "port": 18035
   },
   "database": {
     "host": "localhost",

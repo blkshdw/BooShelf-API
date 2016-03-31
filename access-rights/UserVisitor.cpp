@@ -11,7 +11,7 @@ using namespace BooShelf;
 UserVisitor::UserVisitor() {
 }
 
-UserVisitor::UserVisitor(crow::json::wvalue userJSON) {
+UserVisitor::UserVisitor(crow::json::rvalue userJSON) {
     _userJSON = userJSON;
 }
 
@@ -39,7 +39,7 @@ bool UserVisitor::canGetOwnProfile() {
 }
 
 crow::json::wvalue UserVisitor::getuserJSON() {
-    return *_userJSON;
+    return _userJSON;
 }
 
 // Other Profile
