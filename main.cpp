@@ -44,11 +44,8 @@ int main(){
     CROW_ROUTE(app, "/me")
             .methods("GET"_method)
     ([&db, &conn] (const crow::request& req) {
-        try {
-            return BooShelf::Route::me(conn, db, req);
-        } catch (BooShelf::Http::HttpException error) {
-            return error.response();
-        }
+        cout << "res";
+        return "Hello world";
     });
 
     CROW_ROUTE(app, "/users")

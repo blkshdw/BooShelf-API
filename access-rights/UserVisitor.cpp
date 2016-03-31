@@ -16,7 +16,6 @@ UserVisitor::UserVisitor(crow::json::rvalue userJSON) {
 }
 
 UserVisitor::~UserVisitor() {
-    delete &_userJSON;
 }
 
 // Auth and own profile

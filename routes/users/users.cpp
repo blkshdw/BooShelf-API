@@ -16,11 +16,13 @@ using namespace BooShelf;
 crow::response Route::me(shared_ptr<RethinkDB::Connection> conn, const R::Query& db, const crow::request& req) {
     json::wvalue user;
     auto authCTX = (Middleware::Auth::context*)req.middleware_context;
-    cout << authCTX->visitor->canAddAuthor();
+    cout << "2e2";
     if (authCTX->visitor->canGetOwnProfile()) {
+        cout << "dadw";
         return crow::response(user);
     }
     else {
+        cout << "wrw";
         throw Http::AccessDeniedException();
     }
 }
