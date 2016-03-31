@@ -2,6 +2,11 @@
 // Created by blkshdw on 27.03.16.
 //
 #include "../../crow_all.h"
+#include "../../middleware/auth.h"
+#include "../../tools/auth.h"
+#include "../../exceptions/httpExceptions.h"
+#include "../../tools/token.h"
+#include "../../crow_all.h"
 #include <rethinkdb.h>
 
 #ifndef BOOSHELF_SERVER_USERS_H

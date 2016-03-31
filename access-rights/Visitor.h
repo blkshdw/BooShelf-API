@@ -11,15 +11,15 @@ namespace BooShelf {
     class Visitor {
     public:
         // Own Profile
-        virtual bool canRegister() = 0;
+        virtual bool canRegister(std::string& username, std::string& password, std::shared_ptr<RethinkDB::Connection>& conn, const RethinkDB::Query& db) = 0;
         virtual bool canLogin() = 0;
         virtual bool canEditOwnProfile() = 0;
         virtual bool canGetOwnProfile() = 0;
 
         // Other Profile
-        virtual bool canGetOtherProfile(crow::json::wvalue &user) = 0;
-        virtual bool canEditOtherProfile(crow::json::wvalue &user) = 0;
-        virtual bool canEditOtherFullProfile(crow::json::wvalue &user) = 0;
+        virtual bool canGetOtherProfile(crow::json::wvalue& user) = 0;
+        virtual bool canEditOtherProfile(crow::json::wvalue& user) = 0;
+        virtual bool canEditOtherFullProfile(crow::json::wvalue& user) = 0;
 
         // User
         virtual crow::json::wvalue getuserJSON() = 0;

@@ -12,6 +12,8 @@ using namespace std;
 
 namespace BooShelf {
     namespace Token {
+        const char* const secret_key = "1366666631";
+        const int key_length = 10;
         std::string generate(std::string username, std::string password);
         jwt* decode(string);
         std::string getField(std::string field, std::string token);

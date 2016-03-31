@@ -2,6 +2,7 @@
 // Created by blkshdw on 30.03.16.
 //
 #include "Visitor.h"
+#include "../exceptions/httpExceptions.h"
 
 #ifndef BOOSHELF_SERVER_GUESTVISITOR_H
 #define BOOSHELF_SERVER_GUESTVISITOR_H
@@ -12,7 +13,7 @@ namespace BooShelf {
         GuestVisitor();
 
         // Own Profile
-        bool canRegister() override;
+        bool canRegister(std::string& username, std::string& password, std::shared_ptr<RethinkDB::Connection>& conn, const RethinkDB::Query& db) override;
         bool canLogin() override;
         bool canEditOwnProfile() override;
         bool canGetOwnProfile() override;

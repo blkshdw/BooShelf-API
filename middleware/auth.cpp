@@ -9,32 +9,31 @@ using namespace std;
 using namespace BooShelf;
 namespace R = RethinkDB;
 
-const RethinkDB::Query* Middleware::Auth::_db;
+RethinkDB::Query* Middleware::Auth::_db;
 std::shared_ptr<RethinkDB::Connection> Middleware::Auth::_conn;
 
 
 Middleware::Auth::Auth() {
-
 }
 
 void Middleware::Auth::setDB(std::shared_ptr<RethinkDB::Connection> conn, const RethinkDB::Query& db) {
         _conn = conn;
-        _db = new R::Query(&db);
+        _db = new R::Query(db);
     }
 
 void Middleware::Auth::before_handle(crow::request& req, crow::response& res, context& ctx) {
     auto token = req.get_header_value("Token");
+    ctx.visitor = std::shared_ptr<GuestVisitor>(new GuestVisitor());
     try {
-        R::Cursor cursor = R::db("test").table("users").filter(R::row["token"] == token).without(string("password")).run(*_conn);
+        R::Cursor cursor = _db->table("users").filter(R::row["token"] == token).without(string("password")).run(*_conn);
         for (R::Datum& user : cursor) {
             crow::json::rvalue userJSON = crow::json::load(R::write_datum(user));
-            ctx.visitor = std::shared_ptr<UserVisitor>(new UserVisitor());
+            ctx.visitor = std::shared_ptr<UserVisitor>(new UserVisitor(userJSON));
         }
     } catch (R::Error err) {
-        cout << err.message;
+        CROW_LOG_ERROR << err.message;
+        throw Http::DataBaseException(err.message);
     }
-
-    ctx.visitor = std::shared_ptr<UserVisitor>(new UserVisitor());
 }
 
 void Middleware::Auth::after_handle(crow::request& req, crow::response& res, context& ctx) {

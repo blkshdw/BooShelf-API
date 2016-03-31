@@ -15,7 +15,7 @@ namespace BooShelf {
     namespace Middleware {
         struct Auth {
         private:
-            static const RethinkDB::Query* _db;
+            static RethinkDB::Query *_db;
             static std::shared_ptr<RethinkDB::Connection> _conn;
         public:
             Auth();

@@ -2,70 +2,49 @@
 // Created by blkshdw on 27.03.16.
 //
 #include "users.h"
-#include "../../middleware/auth.h"
-#include "../../tools/auth.h"
-#include "../../exceptions/httpExceptions.h"
-#include "../../tools/token.h"
-#include "../../crow_all.h"
-#include <rethinkdb.h>
 
 namespace R = RethinkDB;
 namespace json = crow::json;
 using namespace BooShelf;
 
 crow::response Route::me(shared_ptr<RethinkDB::Connection> conn, const R::Query& db, const crow::request& req) {
-    json::wvalue user;
     auto authCTX = (Middleware::Auth::context*)req.middleware_context;
-    cout << "2e2";
     if (authCTX->visitor->canGetOwnProfile()) {
-        cout << "dadw";
-        return crow::response(user);
+        return crow::response(authCTX->visitor->getuserJSON());
     }
     else {
-        cout << "wrw";
         throw Http::AccessDeniedException();
     }
 }
 
 crow::response Route::createUser(std::shared_ptr<R::Connection> &conn, const R::Query& db, const crow::request& req) {
     json::wvalue user;
-
+    auto authCTX = (Middleware::Auth::context*)req.middleware_context;
     try {
         Auth::reqNotAuth(conn, db, req);
     } catch (Http::HttpException error) {
-        return crow::response(error.status(), error.body());
+        throw error;
     };
     auto reqJson = json::load(req.body);
+
     string userName = reqJson["username"].s();
     string password = reqJson["password"].s();
 
-    if (userName.find_first_not_of(" \t\n\v\f\r") == std::string::npos) {
-        auto response = Http::UnprocessableEntityException("Username is too short");
-        return crow::response(response.status(), response.body());
-    }
-
-    if (password.find_first_not_of(" \t\n\v\f\r") == std::string::npos) {
-        auto response = Http::UnprocessableEntityException("Password is too short");
-        return crow::response(response.status(), response.body());
-    }
-
-    auto a = &req.middleware_context;
-
-    R::Cursor cursor = db.table("users").filter(R::row["username"] == userName).run(*conn);
-    for (R::Datum& userElem : cursor) {
-        auto response = Http::AlreadyRegisteredException();
-        return crow::response(response.status(), response.body());
-    }
-
-    user["username"] = userName;
-    user["password"] = password;
-    user["token"] = Token::generate(userName, password);
+    bool canRegister;
     try {
-        db.table("users").insert(R::json(json::dump(user))).run(*conn);
-    } catch (R::Error err) {
-        auto response = Http::DataBaseException(err.message);
-        return crow::response(response.status(), response.body());
+        canRegister = authCTX->visitor->canRegister(userName, password, conn, db);
+    } catch(Http::HttpException error) {
+        throw error;
     }
-
+    if (canRegister){
+        user["username"] = userName;
+        user["password"] = password;
+        user["token"] = Token::generate(userName, password);
+        try {
+            db.table("users").insert(R::json(json::dump(user))).run(*conn);
+        } catch (R::Error err) {
+            throw Http::DataBaseException(err.message);
+        }
+    }
     return crow::response(200);
 }

@@ -16,7 +16,7 @@ namespace BooShelf {
         UserVisitor(crow::json::rvalue userJSON);
 
         // Own Profile
-        bool canRegister() override;
+        bool canRegister(std::string& username, std::string& password, std::shared_ptr<RethinkDB::Connection>& conn, const RethinkDB::Query& db) override;
         bool canLogin() override;
         bool canEditOwnProfile() override;
         bool canGetOwnProfile() override;

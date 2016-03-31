@@ -18,6 +18,10 @@ crow::json::wvalue Http::HttpException::body(){
     return body;
 };
 
+Http::HttpException::~HttpException() {
+    delete &_message;
+}
+
 crow::response Http::HttpException::response(){
     return crow::response(_status, crow::json::dump(this->body()));
 };
@@ -44,28 +48,28 @@ Http::AccessDeniedException::AccessDeniedException(string message): HttpExceptio
 
 };
 
-// 422
-Http::UnprocessableEntityException::UnprocessableEntityException(): Http::HttpException(string("Unprocessable Entity"), 422){
+// 400
+Http::UnprocessableEntityException::UnprocessableEntityException(): Http::HttpException(string("Unprocessable Entity"), 400){
 
 };
 
-BooShelf::Http::UnprocessableEntityException::UnprocessableEntityException(string message): Http::HttpException(string("Unprocessable Entity: " + message), 422) {
+Http::UnprocessableEntityException::UnprocessableEntityException(string message): Http::HttpException(string("Unprocessable Entity: " + message), 400) {
 
 };
 
-BooShelf::Http::AlreadyLoggedInException::AlreadyLoggedInException(): Http::UnprocessableEntityException(string("Aready Logged In")){
+Http::AlreadyLoggedInException::AlreadyLoggedInException(): Http::UnprocessableEntityException(string("Aready Logged In")){
 
 };
 
-BooShelf::Http::AlreadyLoggedInException::AlreadyLoggedInException(string message): Http::UnprocessableEntityException(string("Aready Logged In: " + message)) {
+Http::AlreadyLoggedInException::AlreadyLoggedInException(string message): Http::UnprocessableEntityException(string("Aready Logged In: " + message)) {
 
 };
 
-BooShelf::Http::AlreadyRegisteredException::AlreadyRegisteredException(): Http::UnprocessableEntityException(string("Aready Registered")){
+Http::AlreadyRegisteredException::AlreadyRegisteredException(): Http::UnprocessableEntityException(string("Aready Registered")){
 
 };
 
-BooShelf::Http::AlreadyRegisteredException::AlreadyRegisteredException(string message): Http::UnprocessableEntityException(string("Already Registered: " + message)) {
+Http::AlreadyRegisteredException::AlreadyRegisteredException(string message): Http::UnprocessableEntityException(string("Already Registered: " + message)) {
 
 };
 
@@ -78,3 +82,4 @@ Http::DataBaseException::DataBaseException(): Http::HttpException(string("Rethin
 Http::DataBaseException::DataBaseException(string message): Http::HttpException(string("RethinkDB Error: " + message), 500){
 
 };
+

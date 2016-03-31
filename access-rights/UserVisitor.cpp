@@ -16,11 +16,12 @@ UserVisitor::UserVisitor(crow::json::rvalue userJSON) {
 }
 
 UserVisitor::~UserVisitor() {
+    delete &_userJSON;
 }
 
 // Auth and own profile
 
-bool UserVisitor::canRegister() {
+bool UserVisitor::canRegister(std::string& username, std::string& password, std::shared_ptr<RethinkDB::Connection>& conn, const RethinkDB::Query& db) {
     return false;
 }
 

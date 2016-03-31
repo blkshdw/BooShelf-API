@@ -44,8 +44,11 @@ int main(){
     CROW_ROUTE(app, "/me")
             .methods("GET"_method)
     ([&db, &conn] (const crow::request& req) {
-        cout << "res";
-        return "Hello world";
+        try {
+            return BooShelf::Route::me(conn, db, req);
+        } catch (BooShelf::Http::HttpException error) {
+            return error.response();
+        }
     });
 
     CROW_ROUTE(app, "/users")
@@ -56,7 +59,6 @@ int main(){
         } catch (BooShelf::Http::HttpException error) {
             return error.response();
         }
-
     });
 
     crow::logger::setLogLevel(crow::LogLevel::DEBUG);

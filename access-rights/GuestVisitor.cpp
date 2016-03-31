@@ -5,6 +5,7 @@
 
 namespace json = crow::json;
 using namespace BooShelf;
+namespace R = RethinkDB;
 
 // Constructors
 
@@ -13,7 +14,20 @@ GuestVisitor::GuestVisitor() {
 
 // Auth and own profile
 
-bool GuestVisitor::canRegister() {
+bool GuestVisitor::canRegister(std::string& username, std::string& password, std::shared_ptr<RethinkDB::Connection>& conn, const RethinkDB::Query& db) {
+    if (username.find_first_not_of(" \t\n\v\f\r") == std::string::npos) {
+        throw Http::UnprocessableEntityException("Username is too short");
+    }
+
+    if (password.find_first_not_of(" \t\n\v\f\r") == std::string::npos) {
+        throw Http::UnprocessableEntityException("Password is too short");
+    }
+
+    R::Cursor cursor = db.table("users").filter(R::row["username"] == username).run(*conn);
+    for (R::Datum& userElem : cursor) {
+        throw Http::AlreadyRegisteredException();
+    }
+
     return true;
 }
 

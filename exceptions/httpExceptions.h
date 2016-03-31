@@ -18,6 +18,7 @@ namespace BooShelf {
             int _status;
         public:
             HttpException(string, int);
+            ~HttpException();
             crow::response response();
             crow::json::wvalue body();
             int status();
