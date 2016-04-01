@@ -12,7 +12,6 @@ namespace BooShelf {
         crow::json::rvalue _userJSON;
     public:
         UserVisitor();
-        ~UserVisitor();
         UserVisitor(crow::json::rvalue userJSON);
 
         // Own Profile

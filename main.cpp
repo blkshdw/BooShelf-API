@@ -12,6 +12,10 @@
 #include <fstream>
 #include <string>
 #include <streambuf>
+#include <rapidjson/document.h>
+#include <rapidjson/writer.h>
+#include <rapidjson/stringbuffer.h>
+#include <iostream>
 
 namespace R = RethinkDB;
 namespace json = crow::json;
@@ -26,6 +30,11 @@ int main(){
     std::ifstream config_file("config.json");
     // DB CONFIG
     std::string config_str((std::istreambuf_iterator<char>(config_file)), std::istreambuf_iterator<char>());
+    RapidJSON::Document config;
+    if (config.Parse(config_str).HasParseError()) {
+        CROW_LOG_ERROR << "Config parse Error";
+        throw 0;
+    }
     auto const config = json::load(config_str);
     auto const DB_host = config["database"]["host"].s();
     auto const DB_port = config["database"]["port"].i();
@@ -36,6 +45,7 @@ int main(){
     } catch (R::Error err) {
         CROW_LOG_ERROR << "RethinkDB: " + err.message;
     }
+
 
     auto const db = R::db(DB_name);
 

@@ -18,10 +18,6 @@ crow::json::wvalue Http::HttpException::body(){
     return body;
 };
 
-Http::HttpException::~HttpException() {
-    delete &_message;
-}
-
 crow::response Http::HttpException::response(){
     return crow::response(_status, crow::json::dump(this->body()));
 };
