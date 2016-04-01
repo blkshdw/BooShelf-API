@@ -14,6 +14,7 @@
 #include <streambuf>
 #include <rapidjson/document.h>
 #include <rapidjson/writer.h>
+#include <rapidjson/istreamwrapper.h>
 #include <rapidjson/stringbuffer.h>
 #include <iostream>
 
@@ -27,18 +28,13 @@ int main(){
 
 
     // CONFIG
-    std::ifstream config_file("config.json");
-    // DB CONFIG
-    std::string config_str((std::istreambuf_iterator<char>(config_file)), std::istreambuf_iterator<char>());
-    RapidJSON::Document config;
-    if (config.Parse(config_str).HasParseError()) {
-        CROW_LOG_ERROR << "Config parse Error";
-        throw 0;
-    }
-    auto const config = json::load(config_str);
-    auto const DB_host = config["database"]["host"].s();
-    auto const DB_port = config["database"]["port"].i();
-    string const DB_name = config["database"]["name"].s();
+    ifstream ifs("test.json");
+    rapidjson::IStreamWrapper cfg(ifs);
+    rapidjson::Document config;
+    config.ParseStream(cfg);
+    auto const DB_host = config["database"]["host"].GetString();
+    auto const DB_port = config["database"]["port"].GetInt();
+    string const DB_name = config["database"]["name"].GetString();
     std::shared_ptr<R::Connection> conn;
     try {
          conn = R::connect(DB_host, DB_port);
@@ -73,5 +69,5 @@ int main(){
 
     crow::logger::setLogLevel(crow::LogLevel::DEBUG);
 
-    app.port(config["server"]["port"].i()).multithreaded().run();
+    app.port(config["server"]["port"].GetInt()).multithreaded().run();
 }
