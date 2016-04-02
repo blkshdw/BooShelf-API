@@ -1,8 +1,11 @@
 //
 // Created by blkshdw on 27.03.16.
 //
-#include <string>
 #include "../crow_all.h"
+#include <rapidjson/stringbuffer.h>
+#include <rapidjson/writer.h>
+#include <rapidjson/document.h>
+#include <string>
 
 using namespace std;
 
@@ -19,7 +22,7 @@ namespace BooShelf {
         public:
             HttpException(string, int);
             crow::response response();
-            crow::json::wvalue body();
+            string body();
             int status();
         };
 
@@ -57,6 +60,12 @@ namespace BooShelf {
         public:
             DataBaseException ();
             DataBaseException(string);
+        };
+
+        class ServerErrorException: public HttpException {
+        public:
+            ServerErrorException ();
+            ServerErrorException(string);
         };
 
     }

@@ -1,23 +1,24 @@
 //
 // Created by blkshdw on 30.03.16.
 //
+#include <iostream>
 #include "UserVisitor.h"
 
-namespace json = crow::json;
 using namespace BooShelf;
 
 // Constructors
 
 UserVisitor::UserVisitor() {
+
 }
 
-UserVisitor::UserVisitor(crow::json::rvalue userJSON) {
-    _userJSON = userJSON;
+UserVisitor::UserVisitor(std::shared_ptr<RethinkDB::Datum> userDatum) {
+    _userDatum = userDatum;
 }
 
 // Auth and own profile
 
-bool UserVisitor::canRegister(std::string& username, std::string& password, std::shared_ptr<RethinkDB::Connection>& conn, const RethinkDB::Query& db) {
+bool UserVisitor::canRegister() {
     return false;
 }
 
@@ -34,21 +35,32 @@ bool UserVisitor::canGetOwnProfile() {
     return true;
 }
 
-crow::json::wvalue UserVisitor::getuserJSON() {
-    return _userJSON;
+rapidjson::Document UserVisitor::getuserJSON() {
+    rapidjson::Document userJSON;
+    rapidjson::StringStream userJSON_s(this->getUserString().c_str());
+    userJSON.ParseStream(userJSON_s);
+    return userJSON;
+}
+
+std::string UserVisitor::getUserId() {
+    return RethinkDB::write_datum(_userDatum->extract_field("id"));
+}
+
+std::string UserVisitor::getUserString() {
+    return RethinkDB::write_datum(*_userDatum);
 }
 
 // Other Profile
 
-bool UserVisitor::canGetOtherProfile(crow::json::wvalue &user) {
+bool UserVisitor::canGetOtherProfile() {
     return true;
 }
 
-bool UserVisitor::canEditOtherProfile(crow::json::wvalue &user) {
+bool UserVisitor::canEditOtherProfile(rapidjson::Document& user) {
     return false;
 }
 
-bool UserVisitor::canEditOtherFullProfile(crow::json::wvalue &user) {
+bool UserVisitor::canEditOtherFullProfile(rapidjson::Document& user) {
     return false;
 }
 
@@ -58,7 +70,7 @@ bool UserVisitor::canAddBook() {
     return true;
 }
 
-bool UserVisitor::canEditBook(crow::json::wvalue &book) {
+bool UserVisitor::canEditBook(rapidjson::Document& book) {
     return true;
 }
 
@@ -76,16 +88,14 @@ bool UserVisitor::canAddAuthor() {
     return true;
 }
 
-bool UserVisitor::canGetAuthor(crow::json::wvalue &author) {
+bool UserVisitor::canGetAuthor() {
     return true;
 }
 
-bool UserVisitor::canEditAuthor(crow::json::wvalue &author) {
+bool UserVisitor::canEditAuthor(rapidjson::Document& author) {
     return true;
 }
 
 bool UserVisitor::canGetAuthors() {
     return true;
 }
-
-

@@ -11,15 +11,24 @@ Http::HttpException::HttpException(string message, int status){
     _message = message;
 };
 
-crow::json::wvalue Http::HttpException::body(){
-    crow::json::wvalue body;
-    body["error"]["type"] = to_string(_status);
-    body["error"]["message"] = _message;
-    return body;
+string Http::HttpException::body(){
+    rapidjson::Document document;
+    document.SetObject();
+    rapidjson::Value error(rapidjson::kObjectType);
+    rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
+    error.AddMember("type", rapidjson::Value(_status), allocator);
+    rapidjson::Value mes_v;
+    mes_v = rapidjson::StringRef(_message.c_str());
+    error.AddMember("message", mes_v, allocator);
+    document.AddMember("error", error, allocator);
+    rapidjson::StringBuffer strbuf;
+    rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
+    document.Accept(writer);
+    return strbuf.GetString();
 };
 
 crow::response Http::HttpException::response(){
-    return crow::response(_status, crow::json::dump(this->body()));
+    return crow::response(_status, this->body());
 };
 
 int Http::HttpException::status(){
@@ -69,7 +78,7 @@ Http::AlreadyRegisteredException::AlreadyRegisteredException(string message): Ht
 
 };
 
-// 500
+// 500 Data Base
 
 Http::DataBaseException::DataBaseException(): Http::HttpException(string("RethinkDB Error"), 500){
 
@@ -78,4 +87,14 @@ Http::DataBaseException::DataBaseException(): Http::HttpException(string("Rethin
 Http::DataBaseException::DataBaseException(string message): Http::HttpException(string("RethinkDB Error: " + message), 500){
 
 };
+
+// 500 Server
+
+Http::ServerErrorException::ServerErrorException(): Http::HttpException(string("Server Error"), 500) {
+
+}
+
+Http::ServerErrorException::ServerErrorException(string message): Http::HttpException(string("Server Error: " + message), 500) {
+
+}
 

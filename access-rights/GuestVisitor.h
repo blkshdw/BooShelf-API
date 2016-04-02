@@ -13,27 +13,29 @@ namespace BooShelf {
         GuestVisitor();
 
         // Own Profile
-        bool canRegister(std::string& username, std::string& password, std::shared_ptr<RethinkDB::Connection>& conn, const RethinkDB::Query& db) override;
+        bool canRegister() override;
         bool canLogin() override;
         bool canEditOwnProfile() override;
         bool canGetOwnProfile() override;
-        crow::json::wvalue getuserJSON() override;
+        rapidjson::Document getuserJSON() override;
+        std::string getUserString() override;
+        std::string getUserId() override;
 
         // Other Profile
-        bool canGetOtherProfile(crow::json::wvalue& user) override;
-        bool canEditOtherProfile(crow::json::wvalue& user) override;
-        bool canEditOtherFullProfile(crow::json::wvalue& user) override;
+        bool canGetOtherProfile() override;
+        bool canEditOtherProfile(rapidjson::Document& user) override;
+        bool canEditOtherFullProfile(rapidjson::Document& user) override;
 
         // Books
         bool canAddBook() override;
-        bool canEditBook(crow::json::wvalue& book) override;
+        bool canEditBook(rapidjson::Document& book) override;
         bool canGetBook() override;
         bool canGetBooks() override;
 
         // Authors
-        bool canEditAuthor(crow::json::wvalue& author) override;
+        bool canEditAuthor(rapidjson::Document& author) override;
         bool canAddAuthor() override;
-        bool canGetAuthor(crow::json::wvalue& author) override;
+        bool canGetAuthor() override;
         bool canGetAuthors() override;
     };
 }

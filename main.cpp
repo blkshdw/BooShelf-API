@@ -11,15 +11,10 @@
 #include <rethinkdb.h>
 #include <fstream>
 #include <string>
-#include <streambuf>
 #include <rapidjson/document.h>
-#include <rapidjson/writer.h>
 #include <rapidjson/istreamwrapper.h>
-#include <rapidjson/stringbuffer.h>
-#include <iostream>
 
 namespace R = RethinkDB;
-namespace json = crow::json;
 using namespace std;
 
 int main(){
@@ -28,10 +23,10 @@ int main(){
 
 
     // CONFIG
-    ifstream ifs("test.json");
-    rapidjson::IStreamWrapper cfg(ifs);
+    ifstream cfg_file("config.json");
+    rapidjson::IStreamWrapper cfg_wrp(cfg_file);
     rapidjson::Document config;
-    config.ParseStream(cfg);
+    config.ParseStream(cfg_wrp);
     auto const DB_host = config["database"]["host"].GetString();
     auto const DB_port = config["database"]["port"].GetInt();
     string const DB_name = config["database"]["name"].GetString();
@@ -48,12 +43,20 @@ int main(){
     app.get_middleware<BooShelf::Middleware::Auth>().setDB(conn, db);
 
     CROW_ROUTE(app, "/me")
-            .methods("GET"_method)
+            .methods("GET"_method, "PUT"_method)
     ([&db, &conn] (const crow::request& req) {
-        try {
-            return BooShelf::Route::me(conn, db, req);
-        } catch (BooShelf::Http::HttpException error) {
-            return error.response();
+        if (req.method == crow::HTTPMethod::GET) {
+            try {
+                return BooShelf::Route::me(conn, db, req);
+            } catch (BooShelf::Http::HttpException error) {
+                return error.response();
+            }
+        } else if (req.method == crow::HTTPMethod::PUT) {
+            try {
+                return BooShelf::Route::updateMe(conn, db, req);
+            } catch (BooShelf::Http::HttpException error) {
+                return error.response();
+            }
         }
     });
 
@@ -62,6 +65,16 @@ int main(){
     ([&db, &conn] (const crow::request& req) {
         try {
             return BooShelf::Route::createUser(conn, db, req);
+        } catch (BooShelf::Http::HttpException error) {
+            return error.response();
+        }
+    });
+
+    CROW_ROUTE(app, "/login")
+            .methods("POST"_method)
+    ([&db, &conn] (const crow::request& req) {
+        try {
+            return BooShelf::Route::login(conn, db, req);
         } catch (BooShelf::Http::HttpException error) {
             return error.response();
         }

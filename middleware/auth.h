@@ -6,6 +6,8 @@
 #include "../access-rights/Visitor.h"
 #include "../access-rights/GuestVisitor.h"
 #include "../access-rights/UserVisitor.h"
+#include <rapidjson/stringbuffer.h>
+#include <rapidjson/document.h>
 #include <rethinkdb.h>
 #include <string>
 

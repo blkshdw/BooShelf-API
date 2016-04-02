@@ -2,42 +2,44 @@
 // Created by blkshdw on 30.03.16.
 //
 #include "Visitor.h"
-
+#include <rethinkdb.h>
 #ifndef BOOSHELF_SERVER_USERVISITOR_H
 #define BOOSHELF_SERVER_USERVISITOR_H
 
 namespace BooShelf {
     class UserVisitor: public Visitor {
     private:
-        crow::json::rvalue _userJSON;
+        std::shared_ptr<RethinkDB::Datum> _userDatum;
     public:
         UserVisitor();
-        UserVisitor(crow::json::rvalue userJSON);
+        UserVisitor(std::shared_ptr<RethinkDB::Datum> userDatum);
 
         // Own Profile
-        bool canRegister(std::string& username, std::string& password, std::shared_ptr<RethinkDB::Connection>& conn, const RethinkDB::Query& db) override;
+        bool canRegister() override;
         bool canLogin() override;
         bool canEditOwnProfile() override;
         bool canGetOwnProfile() override;
 
         // Other Profile
-        bool canGetOtherProfile(crow::json::wvalue& user) override;
-        bool canEditOtherProfile(crow::json::wvalue& user) override;
-        bool canEditOtherFullProfile(crow::json::wvalue& user) override;
+        bool canGetOtherProfile() override;
+        bool canEditOtherProfile(rapidjson::Document&  user) override;
+        bool canEditOtherFullProfile(rapidjson::Document&  user) override;
 
         // User
-        crow::json::wvalue getuserJSON() override;
+        rapidjson::Document getuserJSON() override;
+        std::string getUserString() override;
+        std::string getUserId() override;
 
         // Books
         bool canAddBook() override;
-        bool canEditBook(crow::json::wvalue& book) override;
+        bool canEditBook(rapidjson::Document&  book) override;
         bool canGetBook() override;
         bool canGetBooks() override;
 
         // Authors
-        bool canEditAuthor(crow::json::wvalue& author) override;
+        bool canEditAuthor(rapidjson::Document&  author) override;
         bool canAddAuthor() override;
-        bool canGetAuthor(crow::json::wvalue& author) override;
+        bool canGetAuthor() override;
         bool canGetAuthors() override;
     };
 }

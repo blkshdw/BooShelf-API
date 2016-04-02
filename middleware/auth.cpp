@@ -27,8 +27,8 @@ void Middleware::Auth::before_handle(crow::request& req, crow::response& res, co
     try {
         R::Cursor cursor = _db->table("users").filter(R::row["token"] == token).without(string("password")).run(*_conn);
         for (R::Datum& user : cursor) {
-            crow::json::rvalue userJSON = crow::json::load(R::write_datum(user));
-            ctx.visitor = std::shared_ptr<UserVisitor>(new UserVisitor(userJSON));
+            std::shared_ptr<R::Datum> userDatum(new R::Datum(user));
+            ctx.visitor = std::shared_ptr<UserVisitor>(new UserVisitor(userDatum));
         }
     } catch (R::Error err) {
         CROW_LOG_ERROR << err.message;

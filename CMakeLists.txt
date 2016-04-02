@@ -28,11 +28,10 @@ set(SOURCE_FILES main.cpp exceptions/httpExceptions.cpp
         routes/books/books.cpp routes/books/books.h
         routes/users/users.cpp routes/users/users.h
         routes/reviews/reviews.cpp routes/reviews/reviews.h
-        routes/authors/authors.cpp routes/authors/authors.h
         tools/token.cpp tools/token.h
         middleware/auth.cpp middleware/auth.h
         access-rights/Visitor.h
         access-rights/UserVisitor.cpp access-rights/UserVisitor.h
-        access-rights/GuestVisitor.cpp access-rights/GuestVisitor.h models/validator/validator.h)
+        access-rights/GuestVisitor.cpp access-rights/GuestVisitor.h models/validator/validator.h models/user.h models/book.h models/review.h)
 add_executable(BooShelf_server ${SOURCE_FILES})
 TARGET_LINK_LIBRARIES( BooShelf_server ${Boost_LIBRARIES} ${JANSSON_LIBRARIES} ssl crypto rethinkdb++ jwt)

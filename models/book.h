@@ -1,0 +1,8 @@
+//
+// Created by tetofag on 02.04.16.
+//
+
+#ifndef BOOSHELF_SERVER_BOOK_MODEL_H
+#define BOOSHELF_SERVER_BOOK_MODEL_H
+
+#endif //BOOSHELF_SERVER_BOOK_MODEL_H
