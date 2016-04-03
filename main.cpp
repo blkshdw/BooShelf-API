@@ -2,12 +2,14 @@
 #include "middleware/auth.h"
 // ROUTES
 #include "routes/users/users.h"
+#include "routes/books/books.h"
 
 // EXCEPTIONS
 #include "exceptions/httpExceptions.h"
 
 // LIBRARIES
 #include "crow_all.h"
+#include "middleware/headers.h"
 #include <rethinkdb.h>
 #include <fstream>
 #include <string>
@@ -19,7 +21,7 @@ using namespace std;
 
 int main(){
 
-    crow::App<BooShelf::Middleware::Auth> app;
+    crow::App<BooShelf::Middleware::Auth, BooShelf::Middleware::Headers> app;
 
 
     // CONFIG
@@ -45,6 +47,7 @@ int main(){
     CROW_ROUTE(app, "/me")
             .methods("GET"_method, "PUT"_method)
     ([&db, &conn] (const crow::request& req) {
+        crow::response res;
         if (req.method == crow::HTTPMethod::GET) {
             try {
                 return BooShelf::Route::me(conn, db, req);
@@ -70,11 +73,31 @@ int main(){
         }
     });
 
+    CROW_ROUTE(app, "/users/<string>")
+            .methods("GET"_method)
+    ([&db, &conn] (const crow::request& req, string userId) {
+        try {
+            return BooShelf::Route::getUser(conn, db, req, userId);
+        } catch (BooShelf::Http::HttpException error) {
+            return error.response();
+        }
+    });
+
     CROW_ROUTE(app, "/login")
             .methods("POST"_method)
     ([&db, &conn] (const crow::request& req) {
         try {
             return BooShelf::Route::login(conn, db, req);
+        } catch (BooShelf::Http::HttpException error) {
+            return error.response();
+        }
+    });
+
+    CROW_ROUTE(app, "/books")
+            .methods("GET"_method)
+    ([&db, &conn] (const crow::request& req) {
+        try {
+            return BooShelf::Route::getBooks(conn, db, req);
         } catch (BooShelf::Http::HttpException error) {
             return error.response();
         }

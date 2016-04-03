@@ -43,7 +43,7 @@ rapidjson::Document UserVisitor::getuserJSON() {
 }
 
 std::string UserVisitor::getUserId() {
-    return RethinkDB::write_datum(_userDatum->extract_field("id"));
+    return _userDatum->extract_field("id").extract_string();
 }
 
 std::string UserVisitor::getUserString() {

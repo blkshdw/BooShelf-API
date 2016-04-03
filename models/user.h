@@ -1,11 +1,10 @@
 //
-// Created by tetofag on 02.04.16.
+// Created by blkshdw on 02.04.16.
 //
+#include <string>
 
 #ifndef BOOSHELF_SERVER_USER_MODEL_H
 #define BOOSHELF_SERVER_USER_MODEL_H
-
-#include <string>
 
 static std::string const USER_SCHEMA =
 R"({
@@ -15,45 +14,24 @@ R"({
   "properties": {
     "password": {
       "id": "password",
-      "type": "string"
+      "type": "string",
+      "maxLength": 100
     },
     "fullName": {
       "id": "fullName",
-      "type": "string"
+      "type": "string",
+      "maxLength": 100
     },
-    "books": {
-      "id": "books",
-      "type": "array",
-      "items": {
-        "id": "0",
-        "type": "object",
-        "properties": {
-          "id": {
-            "id": "id",
-            "type": "string"
-          },
-          "progress": {
-            "id": "progress",
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 10
-          },
-          "startedReading": {
-            "id": "startedReading",
-            "type": "integer"
-          },
-          "finishedReading": {
-            "id": "finishedReading",
-            "type": "integer"
-          },
-          "rating": {
-            "id": "rating",
-            "type": "integer"
-          }
-        },
-        "additionalProperties": false
-      },
-      "additionalItems": false
+    "age": {
+        "id": "age",
+        "type": "number",
+        "minimum": 0,
+        "maximum": 100
+    },
+    "about": {
+        "id": "about",
+        "type": "string",
+        "maxLength": "10000"
     }
   },
   "additionalProperties": false

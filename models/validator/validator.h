@@ -15,7 +15,7 @@ namespace BooShelf {
             rapidjson::StringStream shema_s(schemaJSON.c_str());
             sd.ParseStream(shema_s);
             if (sd.HasParseError()) {
-                throw BooShelf::Http::ServerErrorException("Provided schema is not valid" + string(rapidjson::GetParseError_En(sd.GetParseError())));
+                throw BooShelf::Http::ServerErrorException("Provided schema is not valid: " + string(rapidjson::GetParseError_En(sd.GetParseError())));
             }
             SchemaDocument schema(sd);
 

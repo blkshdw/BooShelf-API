@@ -10,8 +10,8 @@
 #include "../../crow_all.h"
 #include <rethinkdb.h>
 
-#ifndef BOOSHELF_SERVER_USERS_H
-#define BOOSHELF_SERVER_USERS_H
+#ifndef BOOSHELF_SERVER_ROUTE_USERS_H
+#define BOOSHELF_SERVER_ROUTE_USERS_H
 
 namespace BooShelf {
     namespace Route {
@@ -19,6 +19,7 @@ namespace BooShelf {
         crow::response createUser(std::shared_ptr<RethinkDB::Connection> &conn, const RethinkDB::Query& db, const crow::request &req);
         crow::response updateMe(std::shared_ptr<RethinkDB::Connection> &conn, const RethinkDB::Query& db, const crow::request &req);
         crow::response login(std::shared_ptr<RethinkDB::Connection> &conn, const RethinkDB::Query& db, const crow::request &req);
+        crow::response getUser(std::shared_ptr<RethinkDB::Connection> &conn, const RethinkDB::Query& db, const crow::request &req, std::string userId);
     }
 }
 
