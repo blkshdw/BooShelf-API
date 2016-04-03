@@ -6,11 +6,18 @@
 namespace R = RethinkDB;
 crow::response BooShelf::Route::getBooks(std::shared_ptr<RethinkDB::Connection> conn, const RethinkDB::Query &db, const crow::request &req) {
     auto authCTX = (Middleware::Auth::context*)req.middleware_context;
-    string orderBy = "name";
+    auto orderBy = BooShelf::DEF_FILTERS::DEF_ORDER_BY;
+    auto author_filter = BooShelf::DEF_FILTERS::DEF_AUTHOR_FILTER;
+    auto genre_filter = BooShelf::DEF_FILTERS::DEF_GENRE_FILTER;
+    auto title_filter = BooShelf::DEF_FILTERS::DEF_TITLE_FILTER;
+    if (req.url_params.get("author") != nullptr) {
+        author_filter = req.url_params.get("author");
+    }
+    if (req.url_params.get("genre") != nullptr) {
+        genre_filter = req.url_params.get("genre");
+    }
 
-    auto author = req.url_params.get("author");
     cout << author;
-    cout << "vvvv";
     auto genre = req.url_params.get("genre");
     auto title = req.url_params.get("title");
 
