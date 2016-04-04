@@ -16,17 +16,24 @@ crow::response BooShelf::Route::getBooks(std::shared_ptr<RethinkDB::Connection> 
     if (req.url_params.get("genre") != nullptr) {
         genre_filter = req.url_params.get("genre");
     }
-
-    cout << author;
-    auto genre = req.url_params.get("genre");
-    auto title = req.url_params.get("title");
+    if (req.url_params.get("title") != nullptr) {
+        title_filter = req.url_params.get("title");
+    }
 
     if (!authCTX->visitor->canGetBooks()) {
         throw Http::AccessDeniedException();
     }
+    try {
+        R::Cursor cur = db.table("books").order_by(R::desc("popularity")).filter(
+                (R::row["author"].match(author_filter), R::) &&
+                (R::expr(R::row["title"].not_()) || R::row["title"].match(title_filter)) &&
+                (R::expr(R::row["title"].not_()) || R::row["genre"].match(genre_filter))).limit(1000).run(*conn);
+        return crow::response(R::write_datum(cur.to_datum()));
+    } catch(R::Error err) {
+        throw Http::DataBaseException(err.message);
+    }
 
-    R::Cursor cur = db.table("books").order_by(R::desc("popularity")).filter((R::expr(author != nullptr) && R::expr(R::row["author"] == author))).limit(1000).run(*conn);
-    return crow::response(R::write_datum(cur.to_datum()));
+
 };
 
 crow::response BooShelf::Route::getBook(std::shared_ptr<RethinkDB::Connection> conn, const RethinkDB::Query &db, const crow::request &req, std::string book) {

@@ -22,9 +22,9 @@ namespace BooShelf {
     }
     namespace DEF_FILTERS {
         static const string DEF_ORDER_BY = "author";
-        static const string DEF_AUTHOR_FILTER = "";
-        static const string DEF_GENRE_FILTER = "";
-        static const string DEF_TITLE_FILTER = "";
+        static const string DEF_AUTHOR_FILTER = ".";
+        static const string DEF_GENRE_FILTER = ".";
+        static const string DEF_TITLE_FILTER = ".";
     }
 }
 #endif //BOOSHELF_SERVER_BOOKS_H
