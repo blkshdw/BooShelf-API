@@ -39,7 +39,14 @@ crow::response Route::createUser(std::shared_ptr<R::Connection> &conn, const R::
         json::wvalue user;
 
         try {
+            auto cur = db.table("users").filter(R::row["username"] == string(username)).run(*conn);
+            for (R::Datum& user_exists : cur) {
+                throw Http::AlreadyRegisteredException();
+            };
+            user["username"] = username;
+            user["password"] = password;
             db.table("users").insert(R::json(json::dump(user))).run(*conn);
+            return crow::response();
         } catch (R::Error err) {
             throw Http::DataBaseException(err.message);
         }

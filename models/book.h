@@ -10,16 +10,16 @@ static std::string const BOOK_SCHEMA =
   "id": "/",
   "type": "object",
   "properties": {
-    "authorName": {
+    "author": {
       "id": "author",
       "type": "string",
-      "minLength": 5,
+      "minLength": 1,
       "maxLength": 100
     },
     "title": {
       "id": "title",
       "type": "string",
-      "minLength": 5,
+      "minLength": 1,
       "maxLength": 100
     },
     "description": {
@@ -27,13 +27,16 @@ static std::string const BOOK_SCHEMA =
       "type": "string",
       "minLength": 10,
       "maxLength": 100000
+    },
     "genre": {
         "id": "finishedReading",
-        "type": "string"
+        "type": "string",
+        "format": "date-time"
     },
     "writtenOn": {
         "id": "writtenOn",
-        "type": "string"
+        "type": "string",
+        "format": "date-time"
     }
   },
   "additionalProperties": false

@@ -19,8 +19,8 @@ namespace BooShelf {
 
         // Other Profile
         virtual bool canGetOtherProfile() = 0;
-        virtual bool canEditOtherProfile(rapidjson::Document& user) = 0;
-        virtual bool canEditOtherFullProfile(rapidjson::Document& user) = 0;
+        virtual bool canEditOtherProfile(RethinkDB::Query& user) = 0;
+        virtual bool canEditOtherFullProfile(RethinkDB::Query& user) = 0;
 
         // User
         virtual rapidjson::Document getuserJSON() = 0;
@@ -29,15 +29,21 @@ namespace BooShelf {
 
         // Books
         virtual bool canAddBook() = 0;
-        virtual bool canEditBook(rapidjson::Document& book) = 0;
+        virtual bool canEditBook(RethinkDB::Query& book) = 0;
         virtual bool canGetBook() = 0;
         virtual bool canGetBooks() = 0;
 
-        // Authors
-        virtual bool canEditAuthor(rapidjson::Document& author) = 0;
-        virtual bool canAddAuthor() = 0;
-        virtual bool canGetAuthor() = 0;
-        virtual bool canGetAuthors() = 0;
+        // Trackings
+        virtual bool canEditTracking(RethinkDB::Query& tracking) = 0;
+        virtual bool canGetTracking() = 0;
+        virtual bool canGetOwnTrackings() = 0;
+        virtual bool canGetOtherTrackings() = 0;
+
+        // Reviews
+        virtual bool canEditReview(RethinkDB::Query& review) = 0;
+        virtual bool canAddReview() = 0;
+        virtual bool canGetReview() = 0;
+        virtual bool canGetReviews() = 0;
 
     };
 }

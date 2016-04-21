@@ -48,11 +48,11 @@ bool GuestVisitor::canGetOtherProfile() {
     return false;
 }
 
-bool GuestVisitor::canEditOtherProfile(rapidjson::Document& user) {
+bool GuestVisitor::canEditOtherProfile(RethinkDB::Query& user) {
     return false;
 }
 
-bool GuestVisitor::canEditOtherFullProfile(rapidjson::Document& user) {
+bool GuestVisitor::canEditOtherFullProfile(RethinkDB::Query& user) {
     return false;
 }
 
@@ -62,7 +62,7 @@ bool GuestVisitor::canAddBook() {
     return false;
 }
 
-bool GuestVisitor::canEditBook(rapidjson::Document& book) {
+bool GuestVisitor::canEditBook(RethinkDB::Query& book) {
     return false;
 }
 
@@ -71,24 +71,39 @@ bool GuestVisitor::canGetBook() {
 }
 
 bool GuestVisitor::canGetBooks() {
-    return false;
-}
-
-// Authors
-
-bool GuestVisitor::canAddAuthor() {
-    return false;
-}
-
-bool GuestVisitor::canGetAuthor() {
     return true;
 }
 
-bool GuestVisitor::canEditAuthor(rapidjson::Document& author) {
+// Trackings
+bool GuestVisitor::canEditTracking(RethinkDB::Query& tracking) {
     return false;
 }
 
-bool GuestVisitor::canGetAuthors() {
+bool GuestVisitor::canGetTracking() {
+    return false;
+}
+
+bool GuestVisitor::canGetOwnTrackings() {
+    return false;
+}
+
+bool GuestVisitor::canGetOtherTrackings() {
+    return false;
+}
+
+// Review
+bool GuestVisitor::canEditReview(RethinkDB::Query& review) {
+    return false;
+}
+
+bool GuestVisitor::canAddReview() {
+    return false;
+}
+
+bool GuestVisitor::canGetReview() {
     return true;
 }
 
+bool GuestVisitor::canGetReviews() {
+    return true;
+}

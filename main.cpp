@@ -36,7 +36,8 @@ int main(){
     try {
          conn = R::connect(DB_host, DB_port);
     } catch (R::Error err) {
-        CROW_LOG_ERROR << "RethinkDB: " + err.message;
+        CROW_LOG_CRITICAL << "RethinkDB: " + err.message;
+        throw err;
     }
 
 
@@ -94,12 +95,21 @@ int main(){
     });
 
     CROW_ROUTE(app, "/books")
-            .methods("GET"_method)
+            .methods("GET"_method, "POST"_method)
     ([&db, &conn] (const crow::request& req) {
-        try {
-            return BooShelf::Route::getBooks(conn, db, req);
-        } catch (BooShelf::Http::HttpException error) {
-            return error.response();
+        crow::response res;
+        if (req.method == crow::HTTPMethod::GET) {
+            try {
+                return BooShelf::Route::getBooks(conn, db, req);
+            } catch (BooShelf::Http::HttpException error) {
+                return error.response();
+            }
+        } else if (req.method == crow::HTTPMethod::POST) {
+            try {
+                return BooShelf::Route::createBook(conn, db, req);
+            } catch (BooShelf::Http::HttpException error) {
+                return error.response();
+            }
         }
     });
 
