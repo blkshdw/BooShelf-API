@@ -75,6 +75,11 @@ bool GuestVisitor::canGetBooks() {
 }
 
 // Trackings
+
+bool GuestVisitor::canAddTracking() {
+    return false;
+}
+
 bool GuestVisitor::canEditTracking(std::string trackingId, std::shared_ptr<RethinkDB::Connection>& conn, const RethinkDB::Query &db) {
     return false;
 }

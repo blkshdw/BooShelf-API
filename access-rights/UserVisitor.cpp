@@ -75,7 +75,7 @@ bool UserVisitor::canEditBook(std::string bookId, std::shared_ptr<RethinkDB::Con
     try {
         RethinkDB::Cursor cursor = db.table("books").get(bookId).run(*conn);
         auto authorId = cursor.to_datum().get_field("createdBy");
-        if (authorId == getUserId()) {
+        if (authorId != nullptr && authorId->extract_string() == getUserId()) {
             return true;
         }
     } catch (RethinkDB::Error err) {
@@ -93,11 +93,16 @@ bool UserVisitor::canGetBooks() {
 }
 
 //Trackings
+
+bool UserVisitor::canAddTracking() {
+    return true;
+}
+
 bool UserVisitor::canEditTracking(std::string trackingId, std::shared_ptr<RethinkDB::Connection>& conn, const RethinkDB::Query &db) {
     try {
         RethinkDB::Cursor cursor = db.table("trackings").get(trackingId).run(*conn);
         auto authorId = cursor.to_datum().get_field("createdBy");
-        if (authorId == getUserId()) {
+        if (authorId != nullptr && authorId->extract_string() == getUserId()) {
             return true;
         }
     } catch (RethinkDB::Error err) {
@@ -122,7 +127,7 @@ bool UserVisitor::canEditReview(std::string reviewId, std::shared_ptr<RethinkDB:
     try {
         RethinkDB::Cursor cursor = db.table("reviews").get(reviewId).run(*conn);
         auto authorId = cursor.to_datum().get_field("createdBy");
-        if (authorId == getUserId()) {
+        if (authorId != nullptr && authorId->extract_string() == getUserId()) {
             return true;
         }
     } catch (RethinkDB::Error err) {

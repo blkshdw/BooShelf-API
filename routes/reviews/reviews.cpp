@@ -12,6 +12,8 @@ crow::response BooShelf::Route::getReviews(std::shared_ptr<RethinkDB::Connection
 crow::response BooShelf::Route::getReview(std::shared_ptr<RethinkDB::Connection> conn, const RethinkDB::Query &db, const crow::request &req) {
     return crow::response();
 }
+
+// я не знаю, работает ли этот метод - я его не тестил
 crow::response BooShelf::Route::createReview(std::shared_ptr<RethinkDB::Connection>& conn, const RethinkDB::Query &db, const crow::request &req) {
     auto authCTX = (Middleware::Auth::context*)req.middleware_context;
     if (authCTX->visitor->canAddReview()) {

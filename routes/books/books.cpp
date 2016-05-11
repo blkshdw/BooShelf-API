@@ -101,6 +101,8 @@ crow::response BooShelf::Route::createBook(std::shared_ptr<RethinkDB::Connection
     }
 }
 
+// не тестил этот метод, мб не работает
+
 crow::response BooShelf::Route::updateBook(std::shared_ptr<RethinkDB::Connection>& conn, const RethinkDB::Query &db, const crow::request &req, string bookId) {
     auto authCTX = (Middleware::Auth::context*)req.middleware_context;
     try {

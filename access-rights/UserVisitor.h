@@ -39,6 +39,7 @@ namespace BooShelf {
         // Trackings
         bool canEditTracking(std::string trackingId, std::shared_ptr<RethinkDB::Connection>& conn, const RethinkDB::Query &db) override ;
         bool canGetTracking() override ;
+        bool canAddTracking() override;
         bool canGetOwnTrackings() override ;
         bool canGetOtherTrackings() override;
 
