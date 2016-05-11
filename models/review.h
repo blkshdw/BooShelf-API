@@ -16,6 +16,10 @@ static std::string const REVIEW_SCHEMA =
       "type": "string",
       "maxLength": 30
     },
+    "bookId": {
+      "id": "bookId",
+      "type": "string"
+    },
     "title": {
       "id": "title",
       "type": "string",

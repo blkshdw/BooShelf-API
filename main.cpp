@@ -113,6 +113,25 @@ int main(){
         }
     });
 
+    CROW_ROUTE(app, "/books/<string>")
+            .methods("GET"_method, "PUT"_method)
+    ([&db, &conn] (const crow::request& req, string bookId) {
+        crow::response res;
+        if (req.method == crow::HTTPMethod::GET) {
+            try {
+                return BooShelf::Route::getBook(conn, db, req, bookId);
+            } catch (BooShelf::Http::HttpException error) {
+                return error.response();
+            }
+        } else if (req.method == crow::HTTPMethod::PUT) {
+            try {
+                return BooShelf::Route::updateBook(conn, db, req, bookId);
+            } catch (BooShelf::Http::HttpException error) {
+                return error.response();
+            }
+        }
+    });
+
     crow::logger::setLogLevel(crow::LogLevel::DEBUG);
 
     app.port(config["server"]["port"].GetInt()).multithreaded().run();

@@ -14,10 +14,9 @@
 namespace BooShelf {
     namespace Route {
         crow::response getBooks(std::shared_ptr<RethinkDB::Connection> conn, const RethinkDB::Query& db, const crow::request &req);
-        crow::response getBooks(std::shared_ptr<RethinkDB::Connection> conn, const RethinkDB::Query& db, const crow::request &req, std::string userId);
         crow::response getBook(std::shared_ptr<RethinkDB::Connection> conn, const RethinkDB::Query& db, const crow::request &req, std::string bookId);
         crow::response createBook(std::shared_ptr<RethinkDB::Connection> &conn, const RethinkDB::Query& db, const crow::request &req);
-        crow::response updateBook(std::shared_ptr<RethinkDB::Connection> &conn, const RethinkDB::Query& db, const crow::request &req);
+        crow::response updateBook(std::shared_ptr<RethinkDB::Connection> &conn, const RethinkDB::Query& db, const crow::request &req, std::string bookId);
     }
     namespace DEF_FILTERS {
         static const string DEF_ORDER_BY = "author";

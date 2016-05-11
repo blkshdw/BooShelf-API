@@ -48,11 +48,11 @@ bool GuestVisitor::canGetOtherProfile() {
     return false;
 }
 
-bool GuestVisitor::canEditOtherProfile(RethinkDB::Query& user) {
+bool GuestVisitor::canEditOtherProfile(std::string userId, std::shared_ptr<RethinkDB::Connection>& conn, const RethinkDB::Query &db) {
     return false;
 }
 
-bool GuestVisitor::canEditOtherFullProfile(RethinkDB::Query& user) {
+bool GuestVisitor::canEditOtherFullProfile(std::string userId, std::shared_ptr<RethinkDB::Connection>& conn, const RethinkDB::Query &db) {
     return false;
 }
 
@@ -62,7 +62,7 @@ bool GuestVisitor::canAddBook() {
     return false;
 }
 
-bool GuestVisitor::canEditBook(RethinkDB::Query& book) {
+bool GuestVisitor::canEditBook(std::string bookId, std::shared_ptr<RethinkDB::Connection>& conn, const RethinkDB::Query &db) {
     return false;
 }
 
@@ -75,7 +75,7 @@ bool GuestVisitor::canGetBooks() {
 }
 
 // Trackings
-bool GuestVisitor::canEditTracking(RethinkDB::Query& tracking) {
+bool GuestVisitor::canEditTracking(std::string trackingId, std::shared_ptr<RethinkDB::Connection>& conn, const RethinkDB::Query &db) {
     return false;
 }
 
@@ -92,7 +92,7 @@ bool GuestVisitor::canGetOtherTrackings() {
 }
 
 // Review
-bool GuestVisitor::canEditReview(RethinkDB::Query& review) {
+bool GuestVisitor::canEditReview(std::string reviewId, std::shared_ptr<RethinkDB::Connection>& conn, const RethinkDB::Query &db) {
     return false;
 }
 

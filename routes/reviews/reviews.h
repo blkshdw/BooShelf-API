@@ -4,6 +4,7 @@
 #include "../../models/validator/validator.h"
 #include "../../models/user.h"
 #include "../../middleware/auth.h"
+#include "../../models/review.h"
 #include "../../tools/auth.h"
 #include "../../exceptions/httpExceptions.h"
 #include "../../tools/token.h"

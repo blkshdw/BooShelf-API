@@ -101,9 +101,25 @@ crow::response BooShelf::Route::createBook(std::shared_ptr<RethinkDB::Connection
     }
 }
 
-crow::response BooShelf::Route::updateBook(std::shared_ptr<RethinkDB::Connection>& conn, const RethinkDB::Query &db, const crow::request &req) {
+crow::response BooShelf::Route::updateBook(std::shared_ptr<RethinkDB::Connection>& conn, const RethinkDB::Query &db, const crow::request &req, string bookId) {
     auto authCTX = (Middleware::Auth::context*)req.middleware_context;
-    auto bookData = R::json(req.body.c_str());
-    if(!authCTX->visitor->canEditBook(bookData));
-    return crow::response();
+    try {
+        if (!authCTX->visitor->canEditBook(bookId, conn, db)) {
+            throw Http::AccessDeniedException();
+        }
+    } catch (Http::HttpException err) {
+        throw err;
+    }
+    try {
+        BooShelf::Validator::validate(req.body, BOOK_SCHEMA);
+    } catch (Http::HttpException err) {
+        throw err;
+    }
+    try {
+        db.table("books").get(bookId).update(R::json(req.body)).run(*conn);
+        R::Cursor cursor = db.table("books").get(bookId).run(*conn);
+        return crow::response(R::write_datum(cursor.to_datum()));
+    } catch(R::Error err) {
+        throw Http::DataBaseException(err.message);
+    }
 }
